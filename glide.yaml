@@ -1,0 +1,24 @@
+package: github.com/peterbale/external-dns-ingress-migrator
+import:
+- package: github.com/aws/aws-sdk-go
+  version: v1.15.1
+  subpackages:
+  - aws
+  - aws/session
+  - service/route53
+- package: github.com/sirupsen/logrus
+  version: v1.0.6
+- package: github.com/spf13/cobra
+  version: v0.0.3
+- package: k8s.io/api
+  subpackages:
+  - extensions/v1beta1
+- package: k8s.io/apimachinery
+  subpackages:
+  - pkg/apis/meta/v1
+- package: k8s.io/client-go
+  version: v7.0.0
+  subpackages:
+  - kubernetes
+  - tools/clientcmd
+  - util/homedir

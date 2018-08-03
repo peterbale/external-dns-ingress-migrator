@@ -74,6 +74,10 @@ func (k *k8s) getValidUniqueHostnameIngresses(ingresses []v1beta1.Ingress) []v1b
 				log.Warnf("Ignoring invalid domain hostname: %s", rule.Host)
 				continue
 			}
+			if len(ingress.Status.LoadBalancer.Ingress) == 0 {
+				log.Warnf("Ignoring ingress due to empty loadbalancer status: %s", rule.Host)
+				continue
+			}
 			hostnameIngresses[rule.Host] = append(hostnameIngresses[rule.Host], ingress)
 		}
 	}

@@ -62,7 +62,7 @@ func (r *route53) CreateRegistry(registryData []registry.Data) error {
 			for _, rr := range rrset.ResourceRecords {
 				values = append(values, *rr.Value)
 			}
-			log.Infof("record \"%s\" already exists with values: %v", name, values)
+			log.Debugf("record \"%s\" already exists with values: %v", name, values)
 			continue
 		}
 		var rrsetGroup []map[*aws_route53.ResourceRecordSet]string
@@ -93,16 +93,20 @@ func (r *route53) getRecordSets() (map[string]*aws_route53.ResourceRecordSet, er
 	rrsets := make(map[string]*aws_route53.ResourceRecordSet)
 
 	rrsetParams := &aws_route53.ListResourceRecordSetsInput{HostedZoneId: r.zone}
-	rrResp, err := r.client.ListResourceRecordSets(rrsetParams)
+	pageNum := 0
+	err := r.client.ListResourceRecordSetsPages(rrsetParams,
+		func(page *aws_route53.ListResourceRecordSetsOutput, lastPage bool) bool {
+			pageNum++
+			for _, entry := range page.ResourceRecordSets {
+				log.Debugf("Found entry: %s", *entry.Name)
+				rrsets[*entry.Name] = entry
+			}
+			return pageNum <= 30
+		},
+	)
 	if err != nil {
 		return rrsets, fmt.Errorf("failed to list route53 record set for zone \"%v\": %v", r.zone, err)
 	}
-
-	for _, entry := range rrResp.ResourceRecordSets {
-		log.Debugf("Found entry: %s", *entry.Name)
-		rrsets[*entry.Name] = entry
-	}
-	log.Debug("Record set groups found: %+v", rrsets)
 
 	return rrsets, nil
 }

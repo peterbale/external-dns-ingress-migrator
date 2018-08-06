@@ -10,6 +10,8 @@ import:
   version: v1.0.6
 - package: github.com/spf13/cobra
   version: v0.0.3
+- package: github.com/spf13/pflag
+  version: v1.0.1
 - package: k8s.io/api
   subpackages:
   - extensions/v1beta1
@@ -17,7 +19,7 @@ import:
   subpackages:
   - pkg/apis/meta/v1
 - package: k8s.io/client-go
-  version: v7.0.0
+  version: v6.0.0
   subpackages:
   - kubernetes
   - tools/clientcmd

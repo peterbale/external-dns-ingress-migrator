@@ -1,3 +1,4 @@
 external-dns-ingress-migrator
 vendor
+glide.lock
 .idea
